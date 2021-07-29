@@ -48,8 +48,7 @@ public class DTO {
 		return line;
 	}
 
-	public void setLine(String line) {
+	public void setLine (String line) {
 		this.line = line;
 	}
-
 }
