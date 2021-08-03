@@ -21,7 +21,6 @@ public class Main {
 			Validate validate = new TextValidate();
 			MongoDBConnector mongo = new MongoDBConnection(null);
 			Json json = new JsonBuilder();
-
 			System.out.println("If you wanna work with console write \"Console\", "
 					+ "want to read line from file enter \"File\", read form DataBase enter \"DB\"!");
 

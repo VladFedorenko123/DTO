@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import src.srccode.interfaces.MongoDBConnector;
+import src.srccode.interfaces.Propertiess;
 
 public class MongoDBConnection implements MongoDBConnector {
 
@@ -15,9 +16,11 @@ public class MongoDBConnection implements MongoDBConnector {
 
 	@Override
 	public String connection() {
-		MongoClient mongo = new MongoClient("localhost", 27017);
-		MongoDatabase db = mongo.getDatabase("database");
-		MongoCollection<Document> collection = db.getCollection("Col");
+		Propertiess properties = new PropertiesImplementation();
+
+		MongoClient mongo = new MongoClient(properties.getProperties().get(0), Integer.parseInt(properties.getProperties().get(1)));
+		MongoDatabase db = mongo.getDatabase(properties.getProperties().get(2));
+		MongoCollection<Document> collection = db.getCollection(properties.getProperties().get(3));
 
 		String text = collection.find().first().getString("str");
 

@@ -7,13 +7,14 @@ import java.util.List;
 import src.srccode.interfaces.Vowels;
 
 public class VowelsCalculator implements Vowels {
+	private static final List<Character> VOWELS = new ArrayList<>(Arrays.asList('a', 'e', 'i', 'o', 'u', 'y'));
+
 	@Override
 	public int getVowels(String text) {
-		List<Character> vowels = new ArrayList<>(Arrays.asList('a', 'e', 'i', 'o', 'u', 'y'));
 		text = text.toLowerCase();
 		int vowelsCounter = 0;
 		for (int i = 0; i < text.length(); i++) {
-			if (vowels.contains(text.charAt(i))) {
+			if (VOWELS.contains(text.charAt(i))) {
 				vowelsCounter++;
 			}
 		}
