@@ -1,5 +1,7 @@
 package src.srccode.interfaces;
 
+import java.util.List;
+
 public interface CollectionList {
-	void saveList(String text);
+	List<String> saveList(String text);
 }

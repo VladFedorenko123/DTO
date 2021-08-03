@@ -2,22 +2,18 @@ package src.srccode.dto;
 
 import java.sql.Timestamp;
 
-public class DTO {
-
-	public static final String InputType = null;
+public class AnalysesDTO {
 	private int vowelsNumber;
-	private int consonantNumber;
+	private int consonantsNumber;
 	private Timestamp timestamp;
-	private String line;
 
-	public DTO(int vowelsNumber, int consonantNumber, Timestamp timestamp, String line) {
+	public AnalysesDTO(int vowelsNumber, int consonantNumber, Timestamp timestamp) {
 		this.vowelsNumber = vowelsNumber;
-		this.consonantNumber = consonantNumber;
+		this.consonantsNumber = consonantNumber;
 		this.timestamp = timestamp;
-		this.line = line;
 	}
 
-	public DTO() {
+	public AnalysesDTO() {
 	}
 
 	public int getVowelsNumber() {
@@ -29,11 +25,11 @@ public class DTO {
 	}
 
 	public int getConsonantNumber() {
-		return consonantNumber;
+		return consonantsNumber;
 	}
 
 	public void getConsonantNumber(int consonantNumber) {
-		this.consonantNumber = consonantNumber;
+		this.consonantsNumber = consonantNumber;
 	}
 
 	public Timestamp getTimestamp() {
@@ -42,13 +38,5 @@ public class DTO {
 
 	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
-	}
-
-	public String getLine() {
-		return line;
-	}
-
-	public void setLine (String line) {
-		this.line = line;
 	}
 }

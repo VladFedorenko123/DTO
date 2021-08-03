@@ -2,78 +2,62 @@ package src.srccode.dto;
 
 import java.util.Scanner;
 
+import src.srccode.enums.InputType;
 import src.srccode.interfaces.CollectionList;
-import src.srccode.interfaces.Consonant;
-import src.srccode.interfaces.Line;
+import src.srccode.interfaces.Json;
+import src.srccode.interfaces.MongoDBConnector;
 import src.srccode.interfaces.Reader;
-import src.srccode.interfaces.Time;
-import src.srccode.interfaces.Vowels;
+import src.srccode.interfaces.Validate;
 
 public class Main {
+	private static boolean restart = true;
+	private static Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		Reader read = new FileRead();
-		Vowels vowels = new VowelsCalculator();
-		Consonant consonant = new ConsonantCalculator();
-		Time timestamp = new TimestampOfCreatingText();
-		Line myLine = new GetLine();
-		CollectionList collection = new SaveCollection();
-		
-		Scanner scanner = new Scanner(System.in);
-		
-		System.out.println("If you wanna work with console write \"Console\", "
-				+ "want to read line from file enter \"File\", read form DataBase enter \"DB\"!");
+		while (restart) {
+			Reader read = new FileRead();
+			Reader readDB = new MySQLReadText();
+			CollectionList collection = new SaveCollection();
+			Validate validate = new TextValidate();
+			MongoDBConnector mongo = new MongoDBConnection(null);
+			Json json = new JsonBuilder();
 
-		String workPlace = scanner.nextLine();
+			System.out.println("If you wanna work with console write \"Console\", "
+					+ "want to read line from file enter \"File\", read form DataBase enter \"DB\"!");
 
-		if (workPlace.equals(InputType.CONSOLE.getInputType())) {
-			System.out.println("Please enter some text");
-			String text = scanner.nextLine();
+			String workPlace = scanner.nextLine();
 
-			DTO dto = new DTO(vowels.getVowels(text), consonant.getConsonant(text), timestamp.getTimestamp(),
-					myLine.getLine(text));
-			System.out.println("Your entered line: " + dto.getLine() + "\nTimestamp of creating text: "
-					+ dto.getTimestamp() + "\nVowesl Number: " + dto.getVowelsNumber() + "\nConsonant Nubmber: "
-					+ dto.getConsonantNumber());
+			if (workPlace.equals(InputType.CONSOLE.getInputType())) {
+				System.out.println("Please enter some text");
+				String text = scanner.nextLine();
+				boolean isValid = validate.validate(text);
+				if (isValid == true) {
+					json.printJson(text);
+					System.out.println(collection.saveList(text));
+				} else {
+					System.out.println("You entered text with some issues!");
+					main(args);
+				}
+			} else if (workPlace.equals(InputType.FILE.getInputType())) {
+				String text = read.getText();
+				json.printJson(text);
+				System.out.println(collection.saveList(text));
 
-			collection.saveList(text);
-
-		} else if (workPlace.equals(InputType.FILE.getInputType())) {
-			String text = read.getText();
-
-			DTO dto = new DTO(vowels.getVowels(text), consonant.getConsonant(text), timestamp.getTimestamp(),
-					myLine.getLine(text));
-			System.out.println("Your entered line: " + dto.getLine() + "\nTimestamp of creating text: "
-					+ dto.getTimestamp() + "\nVowesl Number: " + dto.getVowelsNumber() + "\nConsonant Nubmber: "
-					+ dto.getConsonantNumber());
-			collection.saveList(text);
-
-		} else if (workPlace.equals(InputType.DB.getInputType())) {
-			String text = read.getText();
-
-			DTO dto = new DTO(vowels.getVowels(text), consonant.getConsonant(text), timestamp.getTimestamp(),
-					myLine.getLine(text));
-			System.out.println("Your entered line: " + dto.getLine() + "\nTimestamp of creating text: "
-					+ dto.getTimestamp() + "\nVowesl Number: " + dto.getVowelsNumber() + "\nConsonant Nubmber: "
-					+ dto.getConsonantNumber());
-			collection.saveList(text);
+			} else if (workPlace.equals(InputType.DB.getInputType())) {
+				System.out.println(
+						"Please make a choice. If you want use MySQL Database enter \"MySQL\", MongoDB please enter \"MongoDB\"");
+				String choiceDB = scanner.nextLine();
+				if (choiceDB.equals("MySQL")) {
+					String text = readDB.getText();
+					json.printJson(text);
+					System.out.println(collection.saveList(text));
+				} else if (choiceDB.equals("MongoDB")) {
+					String text = mongo.connection();
+					json.printJson(text);
+					System.out.println(collection.saveList(text));
+				}
+			}
 		}
 		scanner.close();
-	}
-}
-
-enum InputType {
-	CONSOLE("Console"),
-
-	FILE("File"), DB("DB");
-
-	private final String inputType;
-
-	InputType(String inputType) {
-		this.inputType = inputType;
-	}
-
-	public String getInputType() {
-		return inputType;
 	}
 }

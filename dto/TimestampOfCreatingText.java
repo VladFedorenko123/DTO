@@ -11,5 +11,4 @@ public class TimestampOfCreatingText implements Time {
 		Timestamp time = new Timestamp(System.currentTimeMillis());
 		return (time);
 	}
-
 }
