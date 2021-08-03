@@ -1,10 +1,5 @@
 package src.srccode.dto;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import org.bson.Document;
 
 import com.mongodb.MongoClient;
@@ -20,23 +15,15 @@ public class MongoDBConnection implements MongoDBConnector {
 
 	@Override
 	public String connection() {
-		try (InputStream input = new FileInputStream("/home/vlad/eclipse-workspace/DTO/configuration.properties")) {
-			Properties prop = new Properties();
-			prop.load(input);
+		PropertySingleton propertySingleton = PropertySingleton.getInstance();
 
-			MongoClient mongo = new MongoClient(prop.getProperty("database.mongoUrl"),
-					Integer.parseInt(prop.getProperty("database.mongoPort")));
-			MongoDatabase db = mongo.getDatabase(prop.getProperty("database.mongoDatabase"));
-			MongoCollection<Document> collection = db.getCollection(prop.getProperty("database.mongoCollection"));
+		MongoClient mongo = new MongoClient(propertySingleton.mongoUrl, Integer.parseInt(propertySingleton.mongoPort));
+		MongoDatabase db = mongo.getDatabase(propertySingleton.mongoDatabase);
+		MongoCollection<Document> collection = db.getCollection(propertySingleton.mongoCollection);
 
-			String text = collection.find().first().getString("str");
+		String text = collection.find().first().getString("str");
 
-			mongo.close();
-			return text;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-
+		mongo.close();
+		return text;
 	}
 }
